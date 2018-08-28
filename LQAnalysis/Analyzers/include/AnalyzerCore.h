@@ -457,6 +457,10 @@ class AnalyzerCore : public LQCycleBase {
   int  GetLeptonType(snu::KElectron El, std::vector<snu::KTruth>& TruthColl, TString Option="");
   int  GetLeptonType(snu::KMuon Mu, std::vector<snu::KTruth>& TruthColl, TString Option="");
   int  GetPhotonType(int PhotonIdx, std::vector<snu::KTruth> TruthColl);
-  
+
+  /////jhchoi ISR///
+
+  bool Is_from_hard(int i, vector<int> hardindx, std::vector<snu::KTruth> truthColl);
+  vector<int> Hard_index(vector<int> hardpid,   std::vector<snu::KTruth> truthColl);
 };
 #endif

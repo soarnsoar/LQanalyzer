@@ -5319,3 +5319,57 @@ int AnalyzerCore::GetPhotonType(int PhotonIdx, std::vector<snu::KTruth> TruthCol
 }
 
 //------------------------------------------------------------------------------------------//
+
+
+///////////jhchoi ISR(DY) functions////////
+
+
+bool AnalyzerCore::Is_from_hard(int i, vector<int> hardindx, std::vector<snu::KTruth> truthColl){ // From hardprocess vtx?
+
+  //int i => GenLevel index
+  // vector<int> hardindx ==> vector whose elements are the indices of hardprocess particles.
+  //std::vector<snu::KTruth> truthColl ==> GenLevel particles
+
+  int mother = truthColl.at(i).IndexMother();
+
+  if(mother == -1){  // truthColl.at(-1) ==> error!
+    return 0;
+  }
+
+
+  bool is_from_hard = 0;
+  int hardindxsize = hardindx.size();
+  while( truthColl.at(mother).GenStatus() != 4 ){//if it is not just after proton 
+    //to check all mothers
+    for(int j = 0 ; j<hardindxsize; j++){
+      if(mother == hardindx[j]) is_from_hard = 1;//if at least one of the mothers is hardprocess particle 
+    }//end of for j hardindx    
+    mother = truthColl.at(mother).IndexMother();//next step : check mother's mother
+    if(mother == -1) break;
+  }//end of while mother is not proton beam ptl
+  return is_from_hard;
+}
+
+
+vector<int> AnalyzerCore::Hard_index(vector<int> hardpid,   std::vector<snu::KTruth> truthColl){
+  //Make vector array whose elements are indices of hardprocess particle
+  //vector<int> hardpid==> Set the pid of hardprocess vtx. e.g.) For DY : 23(Z) , 22(gamma)
+  int truthsize=truthColl.size();
+  int hardpidsize = hardpid.size();
+  vector<int> hardindx;
+  for(int i =0; i<truthsize; i++){ // i : all GenParticles
+    Bool_t ishard = truthColl.at(i).ReadStatusFlag(2); // status flag of isHard
+    int pid = truthColl.at(i).PdgId(); // pid of ith particle
+    if(ishard){
+      for(int j =0; j < hardpidsize; j++){
+	if(pid == hardpid[j]){ // if it is hardprocess particle && has pid which we want to get.(DY: 23/22)
+	  hardindx.push_back(i);
+	}
+      }
+    }
+    
+  }
+  return hardindx;//particle index of hardparticle
+  
+}
+  

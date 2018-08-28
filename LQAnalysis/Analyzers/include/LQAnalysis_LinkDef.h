@@ -23,4 +23,7 @@
 #pragma link C++ class GetFakeSF+;
 #pragma link C++ class PileupValidation+;
 
+#pragma link C++ class ISR_genreco_muons2016+;
+#pragma link C++ class ISR_genreco_electrons2016+;
+
 #endif // __CINT__
